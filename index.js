@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
   let count = 0;
   for (key in req.query) {
     console.log(`${key}: ${req.query[key]}`);
-    if (!(key === "gen")) {
+    if (!(key === "gen" && !(key === "delay"))) {
       if (count === 0) {
         url += `${key}=${req.query[key]}`;
         count += 1;
@@ -28,12 +28,13 @@ app.get("/", (req, res) => {
     const page = await browser.newPage();
     await page.goto(url);
 
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(req.query.delay ?? 1000);
 
     await page.screenshot({ path: "genCap.png" });
+
+    await res.sendFile("genCap.png", { root: __dirname });
 
     // Closing the Puppeteer controlled headless browser
     await browser.close();
   });
-  res.sendFile("genCap.png", { root: __dirname });
 });
