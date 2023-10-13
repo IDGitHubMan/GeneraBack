@@ -2,6 +2,11 @@ const express = require("express"); // Adding Express
 const app = express(); // Initializing Express
 const puppeteer = require("puppeteer"); // Adding Puppeteer
 
+import functions from "firebase-functions";
+import cors from "cors";
+
+app.use(cors());
+
 // Making Express listen on port 7000
 app.listen(1000, () => {
   console.log(`Running on port 7000.`);
@@ -38,3 +43,5 @@ app.get("/", (req, res) => {
     await browser.close();
   });
 });
+
+export const api = functions.https.onRequest(app);
